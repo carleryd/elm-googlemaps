@@ -1,0 +1,62 @@
+Elm.Main = Elm.Main || {};
+Elm.Main.make = function (_elm) {
+   "use strict";
+   _elm.Main = _elm.Main || {};
+   if (_elm.Main.values) return _elm.Main.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var update = F2(function (action,model) {
+      var _p0 = action;
+      switch (_p0.ctor)
+      {case "NoOp": return model;
+         case "Increase": return _U.update(model,
+           {counter: model.counter + 1});
+         default: return _U.update(model,{counter: model.counter - 1});}
+   });
+   var Decrease = {ctor: "Decrease"};
+   var Increase = {ctor: "Increase"};
+   var view = F2(function (address,initialModel) {
+      return A2($Html.div,
+      _U.list([$Html$Attributes.id("container")]),
+      _U.list([$Html.text($Basics.toString(initialModel.counter))
+              ,A2($Html.button,
+              _U.list([A2($Html$Events.onClick,address,Increase)]),
+              _U.list([$Html.text("Increase")]))
+              ,A2($Html.button,
+              _U.list([A2($Html$Events.onClick,address,Decrease)]),
+              _U.list([$Html.text("Decrease")]))]));
+   });
+   var inbox = $Signal.mailbox(Increase);
+   var actions = inbox.signal;
+   var NoOp = {ctor: "NoOp"};
+   var initialModel = {counter: 0};
+   var model = A3($Signal.foldp,update,initialModel,actions);
+   var modelChanges = Elm.Native.Port.make(_elm).outboundSignal("modelChanges",
+   function (v) {
+      return {counter: v.counter};
+   },
+   model);
+   var main = A2($Signal.map,view(inbox.address),model);
+   var Model = function (a) {    return {counter: a};};
+   return _elm.Main.values = {_op: _op
+                             ,Model: Model
+                             ,initialModel: initialModel
+                             ,NoOp: NoOp
+                             ,Increase: Increase
+                             ,Decrease: Decrease
+                             ,update: update
+                             ,view: view
+                             ,inbox: inbox
+                             ,actions: actions
+                             ,model: model
+                             ,main: main};
+};

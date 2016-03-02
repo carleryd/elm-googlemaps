@@ -1,0 +1,10 @@
+#map {
+  z-index: 1;
+  height: 300px;
+  width: 500px;
+  position: absolute;
+}
+#elm-land {
+  z-index: 2;
+  position: absolute;
+}
