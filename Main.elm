@@ -19,12 +19,14 @@ import StartApp.Simple as StartApp
 --#### MODEL
 --##############################################################################
 type alias Model =
-  { counter: Int
+  { latitude: Int
+  , longitude: Int
   }
 
 initialModel : Model
 initialModel =
-  { counter = 0
+  { latitude = 40
+  , longitude = 40
   }
 
 --##############################################################################
@@ -32,19 +34,24 @@ initialModel =
 --##############################################################################
 type Action
   = NoOp
-  | Increase
-  | Decrease
+  | IncreaseLat
+  | DecreaseLat
+  | IncreaseLng
+  | DecreaseLng
 
 update : Action -> Model -> Model
 update action model =
   case action of
     NoOp ->
       model
-    Increase ->
-      { model | counter = model.counter + 1 }
-
-    Decrease ->
-      { model | counter = model.counter - 1 }
+    IncreaseLat ->
+      { model | latitude = model.latitude + 1 }
+    DecreaseLat ->
+      { model | latitude = model.latitude - 1 }
+    IncreaseLng ->
+      { model | longitude = model.longitude + 1 }
+    DecreaseLng ->
+      { model | longitude = model.longitude - 1 }
 
 --##############################################################################
 --#### VIEW
@@ -53,13 +60,20 @@ view : Address Action -> Model -> Html
 view address initialModel =
   div
     [ id "container" ]
-    [ text (toString initialModel.counter),
-      button
-        [ onClick address Increase ]
-        [ text "Increase" ],
-      button
-        [ onClick address Decrease ]
-        [ text "Decrease" ]
+    [ text (toString initialModel.latitude)
+    , button
+        [ onClick address IncreaseLat ]
+        [ text "Lat +" ]
+    , button
+        [ onClick address DecreaseLat ]
+        [ text "Lat -" ]
+    , text (toString initialModel.longitude)
+    , button
+        [ onClick address IncreaseLng ]
+        [ text "Lng +" ]
+    , button
+        [ onClick address DecreaseLng ]
+        [ text "Lng -" ]
     ]
 
 --##############################################################################
@@ -71,7 +85,7 @@ port modelChanges =
 
 inbox : Signal.Mailbox Action
 inbox =
-  Signal.mailbox Increase
+  Signal.mailbox NoOp
 
 actions : Signal Action
 actions =

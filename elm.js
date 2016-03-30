@@ -11588,41 +11588,59 @@ Elm.Main.make = function (_elm) {
       var _p0 = action;
       switch (_p0.ctor)
       {case "NoOp": return model;
-         case "Increase": return _U.update(model,
-           {counter: model.counter + 1});
-         default: return _U.update(model,{counter: model.counter - 1});}
+         case "IncreaseLat": return _U.update(model,
+           {latitude: model.latitude + 1});
+         case "DecreaseLat": return _U.update(model,
+           {latitude: model.latitude - 1});
+         case "IncreaseLng": return _U.update(model,
+           {longitude: model.longitude + 1});
+         default: return _U.update(model,
+           {longitude: model.longitude - 1});}
    });
-   var Decrease = {ctor: "Decrease"};
-   var Increase = {ctor: "Increase"};
+   var DecreaseLng = {ctor: "DecreaseLng"};
+   var IncreaseLng = {ctor: "IncreaseLng"};
+   var DecreaseLat = {ctor: "DecreaseLat"};
+   var IncreaseLat = {ctor: "IncreaseLat"};
    var view = F2(function (address,initialModel) {
       return A2($Html.div,
       _U.list([$Html$Attributes.id("container")]),
-      _U.list([$Html.text($Basics.toString(initialModel.counter))
+      _U.list([$Html.text($Basics.toString(initialModel.latitude))
               ,A2($Html.button,
-              _U.list([A2($Html$Events.onClick,address,Increase)]),
-              _U.list([$Html.text("Increase")]))
+              _U.list([A2($Html$Events.onClick,address,IncreaseLat)]),
+              _U.list([$Html.text("Lat +")]))
               ,A2($Html.button,
-              _U.list([A2($Html$Events.onClick,address,Decrease)]),
-              _U.list([$Html.text("Decrease")]))]));
+              _U.list([A2($Html$Events.onClick,address,DecreaseLat)]),
+              _U.list([$Html.text("Lat -")]))
+              ,$Html.text($Basics.toString(initialModel.longitude))
+              ,A2($Html.button,
+              _U.list([A2($Html$Events.onClick,address,IncreaseLng)]),
+              _U.list([$Html.text("Lng +")]))
+              ,A2($Html.button,
+              _U.list([A2($Html$Events.onClick,address,DecreaseLng)]),
+              _U.list([$Html.text("Lng -")]))]));
    });
-   var inbox = $Signal.mailbox(Increase);
-   var actions = inbox.signal;
    var NoOp = {ctor: "NoOp"};
-   var initialModel = {counter: 0};
+   var inbox = $Signal.mailbox(NoOp);
+   var actions = inbox.signal;
+   var initialModel = {latitude: 40,longitude: 40};
    var model = A3($Signal.foldp,update,initialModel,actions);
    var modelChanges = Elm.Native.Port.make(_elm).outboundSignal("modelChanges",
    function (v) {
-      return {counter: v.counter};
+      return {latitude: v.latitude,longitude: v.longitude};
    },
    model);
    var main = A2($Signal.map,view(inbox.address),model);
-   var Model = function (a) {    return {counter: a};};
+   var Model = F2(function (a,b) {
+      return {latitude: a,longitude: b};
+   });
    return _elm.Main.values = {_op: _op
                              ,Model: Model
                              ,initialModel: initialModel
                              ,NoOp: NoOp
-                             ,Increase: Increase
-                             ,Decrease: Decrease
+                             ,IncreaseLat: IncreaseLat
+                             ,DecreaseLat: DecreaseLat
+                             ,IncreaseLng: IncreaseLng
+                             ,DecreaseLng: DecreaseLng
                              ,update: update
                              ,view: view
                              ,inbox: inbox

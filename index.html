@@ -11547,18 +11547,20 @@ Elm.Main.make = function (_elm) {
       switch (_p0.ctor)
       {case "NoOp": return model;
          case "Increase": return _U.update(model,
-           {counter: model.counter + 1});
-         default: return _U.update(model,{counter: model.counter - 1});}
+           {longitude: model.longitude + 1});
+         default: return _U.update(model,
+           {longitude: model.longitude - 1});}
    });
    var Decrease = {ctor: "Decrease"};
    var Increase = {ctor: "Increase"};
    var view = F2(function (address,initialModel) {
       return A2($Html.div,
       _U.list([$Html$Attributes.id("container")]),
-      _U.list([$Html.text($Basics.toString(initialModel.counter))
+      _U.list([$Html.text($Basics.toString(initialModel.latitude))
               ,A2($Html.button,
               _U.list([A2($Html$Events.onClick,address,Increase)]),
               _U.list([$Html.text("Increase")]))
+              ,$Html.text($Basics.toString(initialModel.longitude))
               ,A2($Html.button,
               _U.list([A2($Html$Events.onClick,address,Decrease)]),
               _U.list([$Html.text("Decrease")]))]));
@@ -11566,15 +11568,17 @@ Elm.Main.make = function (_elm) {
    var inbox = $Signal.mailbox(Increase);
    var actions = inbox.signal;
    var NoOp = {ctor: "NoOp"};
-   var initialModel = {counter: 0};
+   var initialModel = {latitude: 40,longitude: 40};
    var model = A3($Signal.foldp,update,initialModel,actions);
    var modelChanges = Elm.Native.Port.make(_elm).outboundSignal("modelChanges",
    function (v) {
-      return {counter: v.counter};
+      return {latitude: v.latitude,longitude: v.longitude};
    },
    model);
    var main = A2($Signal.map,view(inbox.address),model);
-   var Model = function (a) {    return {counter: a};};
+   var Model = F2(function (a,b) {
+      return {latitude: a,longitude: b};
+   });
    return _elm.Main.values = {_op: _op
                              ,Model: Model
                              ,initialModel: initialModel
