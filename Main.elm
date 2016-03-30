@@ -67,7 +67,6 @@ view address initialModel =
 --##############################################################################
 port modelChanges : Signal Model
 port modelChanges =
-  -- Signal.map (\_ -> "DERP") (every second)
   model
 
 inbox : Signal.Mailbox Action
@@ -85,8 +84,3 @@ model =
 main : Signal Html
 main =
   Signal.map (view inbox.address) model
-  -- StartApp.start
-  -- { model = initialModel,
-  --   view = view,
-  --   update = update
-  -- }

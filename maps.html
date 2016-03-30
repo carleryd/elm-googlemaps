@@ -14,15 +14,6 @@
   </head>
   <body>
     <div id="map"></div>
-    <script>
-      var map;
-      function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: -34.397, lng: 150.644},
-          zoom: 8
-        });
-      }
-    </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5q1ViCYKRZzdpeCyhequiMOu6sgUjZSk&callback=initMap"
     async defer></script>
   </body>
@@ -36,7 +27,14 @@
 
   <!-- Run our Elm app! -->
   <script>
-    // Elm.FullScreen(Elm.HelloWorld);
+    var map;
+    function initMap() {
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: -34.397, lng: 150.644 },
+        zoom: 8
+      });
+    }
+    window.map = map;
     var div = document.getElementById("elm-land");
     var main = Elm.embed(Elm.Main, div);
 
